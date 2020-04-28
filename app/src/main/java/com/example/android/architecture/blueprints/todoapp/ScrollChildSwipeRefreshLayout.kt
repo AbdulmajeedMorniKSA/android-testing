@@ -37,4 +37,5 @@ class ScrollChildSwipeRefreshLayout @JvmOverloads constructor(
 
     override fun canChildScrollUp() =
         scrollUpChild?.canScrollVertically(-1) ?: super.canChildScrollUp()
+
 }
