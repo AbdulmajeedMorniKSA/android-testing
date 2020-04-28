@@ -78,4 +78,7 @@ dependencies {
 
     // For Testing live data
     testImplementation "androidx.arch.core:core-testing:$archTestingVersion"
+
+    // Launching coroutines in your tests.
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
 }

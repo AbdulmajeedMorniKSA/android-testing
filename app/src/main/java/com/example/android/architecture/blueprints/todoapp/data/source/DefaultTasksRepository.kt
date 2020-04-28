@@ -33,34 +33,11 @@ import kotlinx.coroutines.withContext
 /**
  * Concrete implementation to load tasks from the data sources into a cache.
  */
-class DefaultTasksRepository private constructor(application: Application) {
-
-    private val tasksRemoteDataSource: TasksDataSource
-    private val tasksLocalDataSource: TasksDataSource
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
-
-    companion object {
-        @Volatile
-        private var INSTANCE: DefaultTasksRepository? = null
-
-        fun getRepository(app: Application): DefaultTasksRepository {
-            return INSTANCE ?: synchronized(this) {
-                DefaultTasksRepository(app).also {
-                    INSTANCE = it
-                }
-            }
-        }
-    }
-
-    init {
-        val database = Room.databaseBuilder(application.applicationContext,
-            ToDoDatabase::class.java, "Tasks.db")
-            .build()
-
-        tasksRemoteDataSource = TasksRemoteDataSource
-        tasksLocalDataSource = TasksLocalDataSource(database.taskDao())
-    }
-
+class DefaultTasksRepository(
+        private val tasksLocalDataSource: TasksDataSource,
+        private val tasksRemoteDataSource: TasksDataSource,
+        private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+){
     suspend fun getTasks(forceUpdate: Boolean = false): Result<List<Task>> {
         if (forceUpdate) {
             try {
@@ -182,5 +159,22 @@ class DefaultTasksRepository private constructor(application: Application) {
 
     private suspend fun getTaskWithId(id: String): Result<Task> {
         return tasksLocalDataSource.getTask(id)
+    }
+
+    companion object {
+        @Volatile
+        private var INSTANCE: DefaultTasksRepository? = null
+
+        fun getRepository(app: Application): DefaultTasksRepository {
+            return INSTANCE ?: synchronized(this) {
+                val database = Room.databaseBuilder(app.applicationContext,
+                        ToDoDatabase::class.java, "Tasks.db")
+                        .build()
+                DefaultTasksRepository(
+                        TasksLocalDataSource(database.taskDao()),
+                        TasksRemoteDataSource
+                ).also { INSTANCE = it }
+            }
+        }
     }
 }
