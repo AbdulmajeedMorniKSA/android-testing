@@ -182,7 +182,7 @@ class TasksViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private fun showSnackbarMessage(message: Int) {
-        _snackbarText.value = Event(message)
+        _snackbarText.value = Event(message) // Trigger the event by setting a new Event as a new value.
     }
 
     private fun filterTasks(tasksResult: Result<List<Task>>): LiveData<List<Task>> {

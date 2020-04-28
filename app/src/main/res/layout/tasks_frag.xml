@@ -112,7 +112,8 @@
             android:src="@drawable/ic_add"
             app:fabSize="normal"
             app:layout_anchor="@id/refresh_layout"
-            app:layout_anchorGravity="bottom|right|end" />
+            app:layout_anchorGravity="bottom|right|end"
+            android:onClick="@{() -> viewmodel.addNewTask()}"/>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
 

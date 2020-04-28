@@ -92,7 +92,6 @@ class TasksFragment : Fragment() {
         setupListAdapter()
         setupRefreshLayout(viewDataBinding.refreshLayout, viewDataBinding.tasksList)
         setupNavigation()
-        setupFab()
     }
 
     private fun setupNavigation() {
@@ -127,14 +126,6 @@ class TasksFragment : Fragment() {
                 true
             }
             show()
-        }
-    }
-
-    private fun setupFab() {
-        activity?.findViewById<FloatingActionButton>(R.id.add_task_fab)?.let {
-            it.setOnClickListener {
-                navigateToAddNewTask()
-            }
         }
     }
 
