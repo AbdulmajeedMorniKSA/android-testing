@@ -11,28 +11,24 @@ import org.junit.Test
 class StatisticsUtilsTest {
 
     /**
-     * Name of the test case should follow this pattern:
-     * subjectUnderTest_actionOrInput_resultState
+     * Naming convention of the test case should follow be like:
+     * (subjectUnderTest_actionOrInput_resultState)
      *
-     * Subject under test is the method or class that is being tested (getActiveAndCompletedStats).
-     * Next is the action or input (noCompleted).
-     * Finally you have the expected result (returnsFiftyFifty).
+     * Subject under test is the method or class that is being tested, here is (getActiveAndCompletedStats).
+     * Next is the action or input, here is (noCompleted).
+     * Finally you have the expected result, here is (returnsHundredZero).
      */
     @Test
-    fun getActiveAndCompletedStats_noCompleted_returnsFiftyFifty() {
+    fun getActiveAndCompletedStats_noCompleted_returnsHundredZero() {
         /**** Given ****/
-        val tasks = listOf(
-             Task("title1", "decs1", isCompleted = false),
-             Task("title2", "decs2", isCompleted = true),
-             Task("title3", "decs3", isCompleted = true),
-             Task("title4", "decs4", isCompleted = false)
-        )
+        val tasks = listOf(Task("title1", "decs1", isCompleted = false))
+
         /**** When ****/
         val result = getActiveAndCompletedStats(tasks)
 
         /**** Then ****/
-        assertThat(result.completedTasksPercent, `is`(50f))
-        assertThat(result.activeTasksPercent, `is`(50f))
+        assertThat(result.completedTasksPercent, `is`(0f))
+        assertThat(result.activeTasksPercent, `is`(100f))
     }
 
     @Test
@@ -67,7 +63,7 @@ class StatisticsUtilsTest {
         assertThat(result.completedTasksPercent, `is`(0f))
         assertThat(result.activeTasksPercent, `is`(0f))
     }
-    
+
     @Test
     fun getActiveAndCompletedStats_error_returns_Zero() {
         val result = getActiveAndCompletedStats(null)
