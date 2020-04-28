@@ -55,7 +55,8 @@ class TasksFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        viewDataBinding = TasksFragBinding.inflate(inflater, container, false).apply {
+        val view = inflater.inflate(R.layout.tasks_frag, container, false)
+        viewDataBinding = TasksFragBinding.bind(view).apply {
             viewmodel = viewModel
         }
         setHasOptionsMenu(true)
