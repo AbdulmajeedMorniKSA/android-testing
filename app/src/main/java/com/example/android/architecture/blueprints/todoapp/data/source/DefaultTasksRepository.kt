@@ -166,7 +166,7 @@ class DefaultTasksRepository(
         @Volatile
         private var INSTANCE: DefaultTasksRepository? = null
 
-        fun getRepository(app: Application): DefaultTasksRepository {
+        fun getInstance(app: Application): DefaultTasksRepository {
             return INSTANCE ?: synchronized(this) {
                 val database = Room.databaseBuilder(app.applicationContext,
                         ToDoDatabase::class.java, "Tasks.db")
