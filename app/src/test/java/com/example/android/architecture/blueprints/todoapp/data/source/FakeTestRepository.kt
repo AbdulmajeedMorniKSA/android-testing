@@ -68,6 +68,8 @@ class FakeTestRepository : TasksRepository {
     }
 
     override suspend fun deleteAllTasks() {
+        runBlocking { refreshTasks() }
+        tasksServiceData.clear()
     }
 
     override suspend fun deleteTask(taskId: String) {

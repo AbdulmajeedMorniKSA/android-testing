@@ -19,7 +19,7 @@ class TasksViewModelFactory(
                 when {
                     isAssignableFrom(TasksViewModel::class.java) ->
                         TasksViewModel(tasksRepository)
-                    isAssignableFrom(TaskDetailFragment::class.java) ->
+                    isAssignableFrom(TaskDetailViewModel::class.java) ->
                         TaskDetailViewModel(tasksRepository)
                     else ->
                         throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")

@@ -31,7 +31,7 @@ import androidx.navigation.fragment.navArgs
 import com.example.android.architecture.blueprints.todoapp.EventObserver
 import com.example.android.architecture.blueprints.todoapp.R
 import com.example.android.architecture.blueprints.todoapp.TasksViewModelFactory
-import com.example.android.architecture.blueprints.todoapp.data.Injection
+import com.example.android.architecture.blueprints.todoapp.ServiceLocator
 import com.example.android.architecture.blueprints.todoapp.data.Task
 import com.example.android.architecture.blueprints.todoapp.databinding.TasksFragBinding
 import com.example.android.architecture.blueprints.todoapp.util.setupRefreshLayout
@@ -45,7 +45,7 @@ import timber.log.Timber
 class TasksFragment : Fragment() {
 
     private val viewModel by viewModels<TasksViewModel> {
-        TasksViewModelFactory(Injection.provideRepository())
+        TasksViewModelFactory(ServiceLocator.provideRepository())
     }
 
     private val args: TasksFragmentArgs by navArgs()

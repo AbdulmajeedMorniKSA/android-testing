@@ -1,19 +1,18 @@
 package com.example.android.architecture.blueprints.todoapp.tasks
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.test.core.app.ApplicationProvider
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.android.architecture.blueprints.todoapp.data.Task
 import com.example.android.architecture.blueprints.todoapp.data.source.FakeTestRepository
 import com.example.android.architecture.blueprints.todoapp.getOrAwaitNextValue
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runBlockingTest
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.nullValue
-import org.hamcrest.core.IsNot.not
-import org.junit.Test
-import org.junit.Rule
-import org.junit.runner.RunWith
 import org.hamcrest.core.Is.`is`
+import org.hamcrest.core.IsNot.not
 import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
 
 /**
  * Created by Abdulmajeed Alyafey on 4/28/20.
@@ -49,7 +48,7 @@ class TasksViewModelTest {
 
         /**** {Then} the new task event is triggered ****/
         val value = tasksViewModel.newTaskEvent.getOrAwaitNextValue()
-        assertThat(value.getContentIfNotHandled(), (not(nullValue())))
+        assertThat(value.getContentIfNotHandled(), not(nullValue()))
     }
 
     @Test
@@ -60,5 +59,16 @@ class TasksViewModelTest {
         // Then
         val liveDataValue = tasksViewModel.tasksAddViewVisible.getOrAwaitNextValue()
         assertThat(liveDataValue, `is`(true))
+    }
+
+    @Test
+    fun deleteAllTasks_makesEmptyList() {
+/*        // when
+        runBlocking { tasksViewModel.deleteAllTasks() }
+
+        val value = tasksViewModel.items.getOrAwaitNextValue()
+
+        // Then
+        assertThat(value, not(emptyList()))*/
     }
 }
