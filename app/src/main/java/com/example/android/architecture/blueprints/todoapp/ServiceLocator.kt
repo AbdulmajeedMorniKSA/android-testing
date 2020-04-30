@@ -15,16 +15,12 @@ object ServiceLocator {
 
     private var database: ToDoDatabase? = null
 
-    private val lock = Any()
-
     @Volatile
     var tasksRepository: TasksRepository? = null
         @VisibleForTesting set
 
-    fun provideRepository(): TasksRepository {
-        synchronized(this) {
-            return tasksRepository ?: createTasksRepository()
-        }
+    fun provideRepository(): TasksRepository = synchronized(this) {
+        return tasksRepository ?: createTasksRepository()
     }
 
     private fun createTasksRepository(): TasksRepository {
@@ -49,19 +45,16 @@ object ServiceLocator {
     }
 
     @VisibleForTesting
-    fun resetRepository() {
-        synchronized(lock) {
-            runBlocking {
-                TasksRemoteDataSource.deleteAllTasks()
-            }
-            // Clear all data to avoid test pollution.
-            database?.apply {
-                clearAllTables()
-                close()
-            }
-            database = null
-            tasksRepository = null
+    fun resetRepository() = synchronized(this) {
+        runBlocking {
+            TasksRemoteDataSource.deleteAllTasks()
         }
+        // Clear all data to avoid test pollution.
+        database?.apply {
+            clearAllTables()
+            close()
+        }
+        database = null
+        tasksRepository = null
     }
-
 }
