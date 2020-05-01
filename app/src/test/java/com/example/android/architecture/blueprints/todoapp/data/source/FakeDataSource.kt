@@ -11,7 +11,7 @@ import java.lang.Exception
  * Created by Abdulmajeed Alyafey on 4/28/20.
  */
 
-class FakeDataSource(var tasks: MutableList<Task>? = mutableListOf())
+open class FakeDataSource(var tasks: MutableList<Task>? = mutableListOf())
     : TasksDataSource {
 
     override suspend fun getTasks(): Result<List<Task>> {
@@ -27,8 +27,8 @@ class FakeDataSource(var tasks: MutableList<Task>? = mutableListOf())
         tasks?.add(task)
     }
 
-    // Bellow we don't need.
     override suspend fun refreshTasks() {
+
     }
 
     override fun observeTasks(): LiveData<Result<List<Task>>> {
