@@ -52,11 +52,12 @@ class DefaultTasksRepositoryTest {
             localDataSource: FakeDataSource,
             remoteDataSource: FakeDataSource
     ) {
+        // Assign and get reference of the data sources.
         tasksLocalDataSource = localDataSource
         tasksRemoteDataSource = remoteDataSource
         tasksRepository = DefaultTasksRepository(
-                tasksLocalDataSource,
-                tasksRemoteDataSource,
+                localDataSource,
+                remoteDataSource,
                 Dispatchers.Unconfined
         )
     }
