@@ -42,7 +42,7 @@ class TaskDetailFragmentTest {
     @Test
     fun activeTaskDetails_DisplayedInUI() = runBlockingTest {
         // GIVEN - Add active (incomplete) task to the DB
-        val activeTask = Task("Active Task", "AndroidX Rocks", false)
+        val activeTask = Task("Active Task", "AndroidX Rocks", true)
         repository.saveTask(activeTask)
 
         // WHEN - Details fragment launched to display task
@@ -65,5 +65,6 @@ class TaskDetailFragmentTest {
 
         Thread.sleep(2000) // Optional just to slow down test and take a look at the UI.
     }
-    
+
+
 }

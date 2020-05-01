@@ -2,7 +2,9 @@ package com.example.android.architecture.blueprints.todoapp
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.android.architecture.blueprints.todoapp.addedittask.AddEditTaskViewModel
 import com.example.android.architecture.blueprints.todoapp.data.source.TasksRepository
+import com.example.android.architecture.blueprints.todoapp.statistics.StatisticsViewModel
 import com.example.android.architecture.blueprints.todoapp.taskdetail.TaskDetailFragment
 import com.example.android.architecture.blueprints.todoapp.taskdetail.TaskDetailViewModel
 import com.example.android.architecture.blueprints.todoapp.tasks.TasksViewModel
@@ -21,6 +23,10 @@ class TasksViewModelFactory(
                         TasksViewModel(tasksRepository)
                     isAssignableFrom(TaskDetailViewModel::class.java) ->
                         TaskDetailViewModel(tasksRepository)
+                    isAssignableFrom(AddEditTaskViewModel::class.java) ->
+                        AddEditTaskViewModel(tasksRepository)
+                    isAssignableFrom(StatisticsViewModel::class.java) ->
+                        StatisticsViewModel(tasksRepository)
                     else ->
                         throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
                 }
