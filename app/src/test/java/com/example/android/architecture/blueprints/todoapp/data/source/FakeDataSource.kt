@@ -46,8 +46,8 @@ open class FakeDataSource(var tasks: MutableList<Task>? = mutableListOf())
     override suspend fun refreshTask(taskId: String) {
     }
 
-
     override suspend fun completeTask(task: Task) {
+        tasks?.find { it.id == task.id }?.isCompleted = true
     }
 
     override suspend fun completeTask(taskId: String) {
@@ -60,6 +60,7 @@ open class FakeDataSource(var tasks: MutableList<Task>? = mutableListOf())
     }
 
     override suspend fun clearCompletedTasks() {
+        tasks?.removeAll { it.isCompleted }
     }
 
 

@@ -1,45 +1,59 @@
 package com.example.android.architecture.blueprints.todoapp.data.source
 
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.android.architecture.blueprints.todoapp.data.Result
 import com.example.android.architecture.blueprints.todoapp.data.Task
-import com.example.android.architecture.blueprints.todoapp.data.source.local.TasksDao
-import com.example.android.architecture.blueprints.todoapp.data.source.local.TasksLocalDataSource
-import com.example.android.architecture.blueprints.todoapp.data.source.remote.TasksRemoteDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
+import org.hamcrest.core.Is.`is`
 import org.hamcrest.core.IsEqual
-import org.junit.Assert.*
+import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mockito
-import org.mockito.Mockito.*
+import org.junit.runner.RunWith
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.verify
 
 /**
  * Created by Abdulmajeed Alyafey on 4/28/20.
  */
-
+@RunWith(AndroidJUnit4::class)
 @ExperimentalCoroutinesApi
 class DefaultTasksRepositoryTest {
 
-    private val task1 = Task("Title1", "Description1")
-    private val task2 = Task("Title2", "Description2")
-    private val task3 = Task("Title3", "Description3")
-
-    private val localTasks = listOf(task3).sortedBy { it.id }
-    private val remoteTasks = listOf(task1, task2).sortedBy { it.id }
-    private val newTasks = listOf(task3).sortedBy { it.id }
-
     private lateinit var tasksLocalDataSource: FakeDataSource
     private lateinit var tasksRemoteDataSource: FakeDataSource
+
+    private lateinit var tasks : List<Task>
 
     // Class under test
     private lateinit var tasksRepository: DefaultTasksRepository
 
     @Before
-    fun createRepository() {
-        tasksLocalDataSource = FakeDataSource(localTasks.toMutableList())
-        tasksRemoteDataSource = FakeDataSource(remoteTasks.toMutableList())
+    fun setUpTasks() {
+        tasks = listOf(
+                Task("Title1", "Description1", isCompleted = false),
+                Task("Title2", "Description2", isCompleted = true),
+                Task("Title3", "Description3", isCompleted = true)
+        )
+        setUpRepository(
+                FakeDataSource(tasks.toMutableList()),
+                FakeDataSource(tasks.toMutableList())
+        )
+    }
+
+    /**
+     * Used to pass fakes or mocks [TasksDataSource].
+     *
+     * By default, fakes are used.
+     */
+    private fun setUpRepository(
+            localDataSource: FakeDataSource,
+            remoteDataSource: FakeDataSource
+    ) {
+        tasksLocalDataSource = localDataSource
+        tasksRemoteDataSource = remoteDataSource
         tasksRepository = DefaultTasksRepository(
                 tasksLocalDataSource,
                 tasksRemoteDataSource,
@@ -47,41 +61,77 @@ class DefaultTasksRepositoryTest {
         )
     }
 
-
-/*
     @Test
     fun getTasks_requestAllTasksFromRemoteDataSource()= runBlockingTest {
         // When tasks are requested from the repository with force update equals to true.
         val tasks = tasksRepository.getTasks(forceUpdate = false) as Result.Success
 
         // Then tasks are loaded from the remote data source
-        assertThat(tasks.data, IsEqual(localTasks))
+        assertThat(tasks.data as  MutableList<Task> , IsEqual(tasksRemoteDataSource.tasks))
     }
-*/
+
+    @Test fun completeTask_savesTaskAndBeCompleted() = runBlockingTest {
+        with(tasksRepository) {
+            // Given a stub active task with title and description added in the repository
+            val newTask = Task("TaskNew", "66336")
+
+            // When
+            saveTask(newTask)
+            completeTask(newTask)
+
+            // Then check task will be completed.
+            val task = tasksLocalDataSource.tasks?.find { it.id == newTask.id }
+            assertThat(task?.isActive, `is`(false))
+        }
+    }
 
     @Test
-    fun saveTask_TEST() = runBlockingTest {
-        // Given
-        val tasksLocalDataSource =  mock(FakeDataSource(localTasks.toMutableList())::class.java)
-        val tasksRemoteDataSource =  mock(FakeDataSource(remoteTasks.toMutableList())::class.java)
-        tasksRepository = DefaultTasksRepository(
-                tasksLocalDataSource,
-                tasksRemoteDataSource,
-                Dispatchers.Unconfined
-        )
-        val newTask = Task("DD", "EEE")
+    fun clearCompletedTasks_returnsOne() = runBlockingTest {
+        // Given new tasks in addition to the ones added before.
+        val task4 = Task("Title4", "Description5", isCompleted = true)
+        val task5 = Task("Title5", "Description6", isCompleted = true)
+        tasksRepository.saveTask(task4)
+        tasksRepository.saveTask(task5)
 
-        val suspendFunction : suspend (task: Task) -> Unit
+        // When delete all completed tasks..
+        tasksRepository.clearCompletedTasks()
+
+        // Then remaining tasks is 1
+        assertThat(tasksLocalDataSource.tasks?.size, `is`(1))
+        assertThat(tasksRemoteDataSource.tasks?.size, `is`(1))
+    }
+
+    /** Using Mocks.. **/
+    @Test
+    fun saveTask_SavesTaskInRemoteAndLocal() = runBlockingTest {
+        // Given mocks data sources and a task..
+        setUpRepository(
+                mock(FakeDataSource(tasks.toMutableList())::class.java),
+                mock(FakeDataSource(tasks.toMutableList())::class.java)
+        )
+        val newTask = Task("Task222", "66336")
 
         // When
         tasksRepository.saveTask(newTask)
 
         // Then
-        verify(tasksRemoteDataSource.saveTask(newTask))
-
-        ///verify(tasksLocalDataSource).saveTask(newTask)
-        /*verify(tasksLocalDataSource).deleteAllTasks()
-        verify(tasksLocalDataSource).saveTask(mock(Task::class.java))*/
+        verify(tasksRemoteDataSource).saveTask(newTask)
+        verify(tasksLocalDataSource).saveTask(newTask)
     }
 
+    /** Using Mocks.. **/
+    @Test
+    fun clearCompletedTasks_deleteTasksFromLocalAndRemoteSource() = runBlockingTest {
+        // Given mocks data sources and a task..
+        setUpRepository(
+                mock(FakeDataSource(tasks.toMutableList())::class.java),
+                mock(FakeDataSource(tasks.toMutableList())::class.java)
+        )
+        // When delete all completed tasks..
+        tasksRepository.clearCompletedTasks()
+
+        // Verify both local and remote functions are called
+        verify(tasksLocalDataSource).clearCompletedTasks()
+        verify(tasksRemoteDataSource).clearCompletedTasks()
+    }
 }
