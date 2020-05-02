@@ -28,6 +28,7 @@ class TaskDetailFragmentTest {
 
     private lateinit var repository: TasksRepository
 
+
     @Before
     fun initRepository() {
         repository = FakeAndroidTestRepository()

@@ -53,6 +53,7 @@ class FakeTestRepository : TasksRepository {
     }
 
     override suspend fun completeTask(task: Task) {
+        tasksServiceData[task.id]?.isCompleted = true
     }
 
     override suspend fun completeTask(taskId: String) {

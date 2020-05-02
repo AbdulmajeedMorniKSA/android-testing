@@ -179,7 +179,7 @@ class TasksViewModel(private val tasksRepository: TasksRepository)
         resultMessageShown = true
     }
 
-    private fun showSnackbarMessage(message: Int) {
+    private fun  showSnackbarMessage(message: Int) {
         _snackbarText.value = Event(message) // Trigger the event by setting a new Event as a new value.
     }
 

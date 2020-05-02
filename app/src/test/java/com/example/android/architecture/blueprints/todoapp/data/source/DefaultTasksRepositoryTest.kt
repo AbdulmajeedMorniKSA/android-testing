@@ -1,6 +1,7 @@
 package com.example.android.architecture.blueprints.todoapp.data.source
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.example.android.architecture.blueprints.todoapp.MainCoroutineRule
 import com.example.android.architecture.blueprints.todoapp.data.Result
 import com.example.android.architecture.blueprints.todoapp.data.Task
 import kotlinx.coroutines.Dispatchers
@@ -10,6 +11,7 @@ import org.hamcrest.core.Is.`is`
 import org.hamcrest.core.IsEqual
 import org.junit.Assert.assertThat
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.mock
@@ -21,6 +23,11 @@ import org.mockito.Mockito.verify
 @RunWith(AndroidJUnit4::class)
 @ExperimentalCoroutinesApi
 class DefaultTasksRepositoryTest {
+
+    // Set the main coroutines dispatcher for unit testing.
+    @ExperimentalCoroutinesApi
+    @get:Rule
+    var mainCoroutineRule = MainCoroutineRule()
 
     private lateinit var tasksLocalDataSource: FakeDataSource
     private lateinit var tasksRemoteDataSource: FakeDataSource
@@ -58,12 +65,24 @@ class DefaultTasksRepositoryTest {
         tasksRepository = DefaultTasksRepository(
                 localDataSource,
                 remoteDataSource,
-                Dispatchers.Unconfined
+                Dispatchers.Main //Here  MainCoroutineRule swaps the Dispatcher.Main for a TestCoroutineDispatcher
         )
     }
 
+    /**
+     * Take a look at
+     * https://codelabs.developers.google.com/codelabs/advanced-android-kotlin-training-testing-survey/#3
+     *
+     * Generally, only create one TestCoroutineDispatcher to run a test.
+     *
+     * Whenever you call runBlockingTest, it will create a new TestCoroutineDispatcher if you don't specify one.
+     *
+     * MainCoroutineRule includes a TestCoroutineDispatcher. So, to ensure that
+     * you don't accidentally create multiple instances of TestCoroutineDispatcher,
+     * use the mainCoroutineRule.runBlockingTest instead of just runBlockingTest.
+     */
     @Test
-    fun getTasks_requestAllTasksFromRemoteDataSource()= runBlockingTest {
+    fun getTasks_requestAllTasksFromRemoteDataSource()= mainCoroutineRule.runBlockingTest {
         // When tasks are requested from the repository with force update equals to true.
         val tasks = tasksRepository.getTasks(forceUpdate = false) as Result.Success
 
