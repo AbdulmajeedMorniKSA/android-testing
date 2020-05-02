@@ -1,27 +1,17 @@
 package com.example.android.architecture.blueprints.todoapp.tasks
 
-import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.test.core.app.ApplicationProvider
-import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import com.example.android.architecture.blueprints.todoapp.Event
 import com.example.android.architecture.blueprints.todoapp.MainCoroutineRule
 import com.example.android.architecture.blueprints.todoapp.R
 import com.example.android.architecture.blueprints.todoapp.data.Task
 import com.example.android.architecture.blueprints.todoapp.data.source.FakeTestRepository
 import com.example.android.architecture.blueprints.todoapp.getOrAwaitNextValue
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runBlockingTest
-import kotlinx.coroutines.test.setMain
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.nullValue
 import org.hamcrest.core.Is.`is`
 import org.hamcrest.core.IsNot.not
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -44,7 +34,7 @@ class TasksViewModelTest {
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
-    // Executes each task synchronously using Architecture Components.
+    // Executes each task synchronously using Architecture Components. (Testing Architecture Components).
     @get: Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
@@ -52,17 +42,17 @@ class TasksViewModelTest {
     private lateinit var tasksViewModel: TasksViewModel
 
     // Use a fake repository to be injected into the viewModel
-    private lateinit var tasksRepository: FakeTestRepository
+    private lateinit var testRepository: FakeTestRepository
 
     @Before
     fun setUpViewModel() {
         // Prepare repository
-        tasksRepository = FakeTestRepository()
+        testRepository = FakeTestRepository()
         val task1 = Task("Title1", "Description1")
         val task2 = Task("Title2", "Description2", true)
         val task3 = Task("Title3", "Description3", true)
-        tasksRepository.addTasks(task1, task2, task3)
-        tasksViewModel = TasksViewModel(tasksRepository)
+        testRepository.addTasks(task1, task2, task3)
+        tasksViewModel = TasksViewModel(testRepository)
     }
 
     @Test
@@ -92,13 +82,13 @@ class TasksViewModelTest {
     fun completeTask_shows_correctSnackbarMessage() {
         // Given active task to be added to the repository.
         val task = Task("T4", "D4")
-        tasksRepository.addTasks(task)
+        testRepository.addTasks(task)
 
         // When marking the task as completed..
         tasksViewModel.completeTask(task, true)
 
         // Then verify the task is completed. + the snackbar message is the correct one.
-        assertThat(tasksRepository.tasksServiceData[task.id]?.isCompleted, `is`(true))
+        assertThat(testRepository.tasksServiceData[task.id]?.isCompleted, `is`(true))
 
         val snackbarTextRsrId: Event<Int> = tasksViewModel.snackbarText.getOrAwaitNextValue ()
         assertThat(snackbarTextRsrId.getContentIfNotHandled(), `is`(R.string.task_marked_complete))
