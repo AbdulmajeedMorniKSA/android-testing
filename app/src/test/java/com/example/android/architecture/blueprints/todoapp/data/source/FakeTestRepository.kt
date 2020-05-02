@@ -13,7 +13,13 @@ class FakeTestRepository : TasksRepository {
 
     var tasksServiceData: LinkedHashMap<String, Task> = LinkedHashMap()
 
+    private var shouldReturnError = false
+
     private val observableTasks = MutableLiveData<Result<List<Task>>>()
+
+    fun setReturnError(value: Boolean) {
+        shouldReturnError = value
+    }
 
     /**
      * Helper method specifically for tests that lets you add tasks.
@@ -24,6 +30,7 @@ class FakeTestRepository : TasksRepository {
     }
 
     override suspend fun getTasks(forceUpdate: Boolean): Result<List<Task>> {
+        if (shouldReturnError) return Result.Error(Exception("Test exception"))
         return Result.Success(tasksServiceData.values.toList())
     }
 
@@ -41,12 +48,12 @@ class FakeTestRepository : TasksRepository {
 
     override fun observeTask(taskId: String): LiveData<Result<Task>> {
         return MutableLiveData<Result<Task>>()
-
     }
 
     override suspend fun getTask(taskId: String, forceUpdate: Boolean): Result<Task> {
-        return Result.Success(Task())
-
+        if (shouldReturnError) return Result.Error(Exception("Test exception"))
+        tasksServiceData[taskId]?.let { return Result.Success(it) }
+        return Result.Error(Exception("Could not find task"))
     }
 
     override suspend fun saveTask(task: Task) {

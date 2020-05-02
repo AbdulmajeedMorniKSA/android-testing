@@ -31,7 +31,7 @@ class StatisticsViewModelTest {
     private lateinit var statisticsViewModel: StatisticsViewModel
 
     // Fake...
-    private lateinit var tasksRepository: TasksRepository
+    private lateinit var tasksRepository: FakeTestRepository
 
     @Before
     fun setUpViewModel() {
@@ -56,4 +56,23 @@ class StatisticsViewModelTest {
         // Then assert that the progress indicator is hidden.
         assertThat(statisticsViewModel.dataLoading.getOrAwaitNextValue(), `is`(false))
     }
+
+    /**
+     * Testing error handling...
+     *
+     * Try to remove [mainCoroutineRule] and see what happen when you run bellow test case!
+     *
+     * You will get exception because view model generates Coroutine on Dispathers.Main!!
+     */
+
+    @Test fun loadStatisticsWhenTasksAreUnavailable_callErrorToDisplay() {
+        // When error happens + and tries to get tasks...
+        tasksRepository.setReturnError(true)
+        statisticsViewModel.refresh()
+
+        // Then verify that empty and error are true (which triggers an error message to be shown).
+        assertThat(statisticsViewModel.empty.getOrAwaitNextValue(), `is`(true))
+        assertThat(statisticsViewModel.error.getOrAwaitNextValue(), `is`(true))
+    }
+    
 }

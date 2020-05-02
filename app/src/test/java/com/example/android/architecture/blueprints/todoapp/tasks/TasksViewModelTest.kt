@@ -77,6 +77,8 @@ class TasksViewModelTest {
 
     /**
      * For Testing Coroutines and ViewModels.
+     *
+     * -> addTasks & completeTask are regulat functions that trigger new coroutines!!!. Here is the difference!
      */
     @Test
     fun completeTask_shows_correctSnackbarMessage() {
