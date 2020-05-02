@@ -14,6 +14,7 @@ import org.junit.Test
 
 /**
  * Created by Abdulmajeed Alyafey on 5/2/20.
+ * https://codelabs.developers.google.com/codelabs/advanced-android-kotlin-training-testing-survey/#6
  */
 @ExperimentalCoroutinesApi
 class StatisticsViewModelTest {
@@ -74,5 +75,5 @@ class StatisticsViewModelTest {
         assertThat(statisticsViewModel.empty.getOrAwaitNextValue(), `is`(true))
         assertThat(statisticsViewModel.error.getOrAwaitNextValue(), `is`(true))
     }
-    
+
 }
