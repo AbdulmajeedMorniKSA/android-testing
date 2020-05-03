@@ -31,6 +31,9 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
+/**
+ * https://codelabs.developers.google.com/codelabs/advanced-android-kotlin-training-testing-survey/#7
+ */
 class TasksActivityTest {
 
     private lateinit var repository: TasksRepository
@@ -96,6 +99,33 @@ class TasksActivityTest {
 
         // Verify previous task is not displayed.
         onView(withText("TITLE1")).check(doesNotExist())
+
+        // Make sure the activity is closed before resetting the db.
+        activityScenario.close()
+    }
+
+    @Test
+    fun createOneTask_deleteTask() {
+        // start up Tasks screen
+        val activityScenario = ActivityScenario.launch(TasksActivity::class.java)
+        dataBindingIdlingResource.monitorActivity(activityScenario) // Important to make idling resource know about the layout.
+
+        // Click add button and add new info and save it.
+        onView(withId(R.id.add_task_fab)).perform(click())
+        onView(withId(R.id.add_task_title_edit_text)).perform(replaceText("New Task Test Title"))
+        onView(withId(R.id.add_task_description_edit_text)).perform(replaceText("New Task Test Description"))
+        onView(withId(R.id.save_task_fab)).perform(click())
+
+        // Verify task is displayed and open its details.
+        onView(withText("New Task Test Title")).check(matches(isDisplayed()))
+        onView(withText("New Task Test Title")).perform(click())
+
+        // Verify details is shown.
+        onView(withText("New Task Test Title")).check(matches(isDisplayed()))
+
+        // Verify it was deleted.
+        onView(withId(R.id.menu_delete)).perform(click())
+        onView(withText("New Task Test Title")).check(doesNotExist())
 
         // Make sure the activity is closed before resetting the db.
         activityScenario.close()
