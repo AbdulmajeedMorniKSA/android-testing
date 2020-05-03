@@ -95,6 +95,7 @@ class TasksFragmentTest {
                 )
         )
 
+        // DON'T YOU EVER USE (Thread.sleep) with Espresso.
         Thread.sleep(2000) // Optional just to slow down test and take a look at the UI.
     }
 }

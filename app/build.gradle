@@ -28,8 +28,9 @@ android {
     }
 
     // Allows you to access android resources in your unit tests, i
-    testOptions {
-        unitTests.includeAndroidResources = true
+    testOptions.unitTests {
+        includeAndroidResources = true
+        returnDefaultValues = true // is required to keep your unit tests running as you add idling resource code to your application code.
     }
 }
 
@@ -45,6 +46,7 @@ dependencies {
     implementation "com.jakewharton.timber:timber:$timberVersion"
     implementation "androidx.legacy:legacy-support-v4:$androidXLegacySupport"
     implementation "androidx.room:room-runtime:$roomVersion"
+    implementation "androidx.test.espresso:espresso-idling-resource:$espressoVersion" // Used in Espresso UI test, but may be in production code
     kapt "androidx.room:room-compiler:$roomVersion"
 
     // Architecture Components
