@@ -30,8 +30,8 @@ import kotlinx.coroutines.*
  * Concrete implementation to load tasks from the data sources into a cache.
  */
 class DefaultTasksRepository(
-        private val tasksLocalDataSource: TasksDataSource,
         private val tasksRemoteDataSource: TasksDataSource,
+        private val tasksLocalDataSource: TasksDataSource,
         private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : TasksRepository {
 
