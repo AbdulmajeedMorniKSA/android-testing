@@ -1,12 +1,15 @@
 package com.example.android.architecture.blueprints.todoapp.tasks
 
+import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
@@ -19,10 +22,12 @@ import com.example.android.architecture.blueprints.todoapp.util.EspressoIdlingRe
 import com.example.android.architecture.blueprints.todoapp.util.monitorActivity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.not
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.Description
 import org.junit.runner.RunWith
 
 /**
@@ -52,6 +57,10 @@ class TasksActivityTest {
     /**
      * Idling resources tell Espresso that the app is idle or busy. This is needed when operations
      * are not scheduled in the main Looper (for example when executed on a different thread).
+     *
+     * Idling resource is a great way to tell Espresso when your app is in an
+     * idle state. This helps Espresso to synchronize your test actions, which makes tests
+     * significantly more reliable.
      */
     @Before
     fun registerIdlingResource() {
@@ -111,10 +120,7 @@ class TasksActivityTest {
         dataBindingIdlingResource.monitorActivity(activityScenario) // Important to make idling resource know about the layout.
 
         // Click add button and add new info and save it.
-        onView(withId(R.id.add_task_fab)).perform(click())
-        onView(withId(R.id.add_task_title_edit_text)).perform(replaceText("New Task Test Title"))
-        onView(withId(R.id.add_task_description_edit_text)).perform(replaceText("New Task Test Description"))
-        onView(withId(R.id.save_task_fab)).perform(click())
+        createTask("New Task Test Title", "New Task Test Description")
 
         // Verify task is displayed and open its details.
         onView(withText("New Task Test Title")).check(matches(isDisplayed()))
@@ -129,5 +135,47 @@ class TasksActivityTest {
 
         // Make sure the activity is closed before resetting the db.
         activityScenario.close()
+    }
+
+
+    @Test
+    fun createTaskMarkItAsComplete_taskIsCompleteInList() {
+        // start up Tasks screen
+        val activityScenario = ActivityScenario.launch(TasksActivity::class.java)
+        dataBindingIdlingResource.monitorActivity(activityScenario) // Important to make idling resource know about the layout.
+
+        // Create new task.
+        createTask("TASK!", "DESC!")
+
+        // Verify it is shown in the list.
+        onView(withText("TASK!")).check(matches(isDisplayed()))
+
+        // Open the new created one.
+        onView(withText("TASK!")).perform(click())
+
+        // Mark it as checked..
+        onView(withId(R.id.task_detail_complete_checkbox)).perform(click())
+
+        // Click back button
+        onView(isRoot()).perform(ViewActions.pressBack())
+
+        // Check that the task is marked as completed
+        onView(allOf(withId(R.id.complete_checkbox), hasSibling(withText("TASK!"))))
+                .check(matches(isChecked()))
+    }
+
+    /**
+     * You can create function and pass to it any thing to do your test on.
+     */
+    private fun createTask(title: String, description: String) {
+        // Click on the add task button
+        onView(withId(R.id.add_task_fab)).perform(click())
+
+        // Add task title and description
+        onView(withId(R.id.add_task_title_edit_text)).perform(replaceText(title))
+        onView(withId(R.id.add_task_description_edit_text)).perform(replaceText(description))
+
+        // Save it ..
+        onView(withId(R.id.save_task_fab)).perform(click())
     }
 }
