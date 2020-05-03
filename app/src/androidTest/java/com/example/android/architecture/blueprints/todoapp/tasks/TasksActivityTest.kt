@@ -160,8 +160,10 @@ class TasksActivityTest {
         onView(isRoot()).perform(ViewActions.pressBack())
 
         // Check that the task is marked as completed
-        onView(allOf(withId(R.id.complete_checkbox), hasSibling(withText("TASK!"))))
-                .check(matches(isChecked()))
+        isCheckBoxForTaskChecked("TASK!")
+
+        // Make sure the activity is closed before resetting the db.
+        activityScenario.close()
     }
 
     /**
@@ -177,5 +179,55 @@ class TasksActivityTest {
 
         // Save it ..
         onView(withId(R.id.save_task_fab)).perform(click())
+    }
+
+    @Test
+    fun showAllTasks() {
+        // Start up Tasks screen.
+        val activityScenario = ActivityScenario.launch(TasksActivity::class.java)
+        dataBindingIdlingResource.monitorActivity(activityScenario) // Important to make idling resource know about the layout.
+
+        createTask("Task1", "Desc1")
+        createTask("Task2", "Desc2")
+        createTask("Task3", "Desc3")
+
+        onView(withText("Task1")).check(matches(isDisplayed()))
+        onView(withText("Task2")).check(matches(isDisplayed()))
+        onView(withText("Task3")).check(matches(isDisplayed()))
+
+        // Make sure the activity is closed before resetting the db.
+        activityScenario.close()
+    }
+
+    @Test
+    fun showCompletedTasksOnly() {
+        // Start up Tasks screen.
+        val activityScenario = ActivityScenario.launch(TasksActivity::class.java)
+        dataBindingIdlingResource.monitorActivity(activityScenario) // Important to make idling resource know about the layout.
+
+        // Create tasks..
+        createTask("Task1", "Desc1")
+
+        // Mark second task as completed
+        clickCheckBoxForTask("Task1")
+
+        // Filter completed tasks only.
+        onView(withId(R.id.menu_filter)).perform(click())
+        onView(withText(R.string.nav_completed)).perform(click())
+
+        // Verify only completed task is shown.
+        onView(withText("Task1")).check(matches(isDisplayed()))
+
+        // Make sure the activity is closed before resetting the db.
+        activityScenario.close()
+    }
+
+    private fun clickCheckBoxForTask(title: String) {
+        onView(allOf(withId(R.id.complete_checkbox), hasSibling(withText(title)))).perform(click())
+    }
+
+    private fun isCheckBoxForTaskChecked(title: String) {
+        onView(allOf(withId(R.id.complete_checkbox), hasSibling(withText(title))))
+                .check(matches(isChecked()))
     }
 }
