@@ -47,7 +47,9 @@ dependencies {
     implementation "androidx.legacy:legacy-support-v4:$androidXLegacySupport"
     implementation "androidx.room:room-runtime:$roomVersion"
     implementation "androidx.test.espresso:espresso-idling-resource:$espressoVersion" // Used in Espresso UI test, but may be in production code
+    implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayoutVersion"
     kapt "androidx.room:room-compiler:$roomVersion"
+
 
     // Architecture Components
     implementation "androidx.room:room-runtime:$roomVersion"

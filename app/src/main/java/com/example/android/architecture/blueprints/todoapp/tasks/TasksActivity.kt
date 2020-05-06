@@ -17,6 +17,10 @@ package com.example.android.architecture.blueprints.todoapp.tasks
 
 import android.app.Activity
 import android.os.Bundle
+import android.view.Gravity
+import android.view.ViewGroup
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
@@ -50,6 +54,18 @@ class TasksActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         findViewById<NavigationView>(R.id.nav_view)
             .setupWithNavController(navController)
+
+        // Test showing custom toast
+        val container = findViewById<ViewGroup>(R.id.toast_container)
+        val customLayout = layoutInflater.inflate(R.layout.toast_view, container)
+        val toastMsg = customLayout.findViewById<TextView>(R.id.toastMsg)
+        toastMsg.text = "This is a custom toast"
+        with (Toast(this)) {
+            setGravity(Gravity.CENTER_VERTICAL, 0, 0)
+            duration = Toast.LENGTH_LONG
+            view = customLayout
+            show()
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
