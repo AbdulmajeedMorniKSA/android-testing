@@ -59,7 +59,7 @@ class TasksActivity : AppCompatActivity() {
         val container = findViewById<ViewGroup>(R.id.toast_container)
         val customLayout = layoutInflater.inflate(R.layout.toast_view, container)
         val toastMsg = customLayout.findViewById<TextView>(R.id.toastMsg)
-        toastMsg.text = "This is a custom toast"
+        //toastMsg.text = "This is a custom toast"
         with (Toast(this)) {
             setGravity(Gravity.CENTER_VERTICAL, 0, 0)
             duration = Toast.LENGTH_LONG

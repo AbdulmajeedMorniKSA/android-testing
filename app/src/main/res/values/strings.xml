@@ -14,7 +14,7 @@
   ~ limitations under the License.
   -->
 
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Todo</string>
     <string name="add_task">New Task</string>
     <string name="edit_task">Edit Task</string>
@@ -61,5 +61,9 @@
     <!-- Content Descriptions -->
     <string name="tasks_header_image_content_description">Tasks header image</string>
     <string name="no_tasks_image_content_description">No tasks image</string>
+
+    <!-- To mark text that should not be translated, use an <xliff:g> placeholder tag. -->
+    <string name="test_not_translated_fully">Check out our 5 <xliff:g id="star">لاتترجم</xliff:g></string>
+
 
 </resources>
