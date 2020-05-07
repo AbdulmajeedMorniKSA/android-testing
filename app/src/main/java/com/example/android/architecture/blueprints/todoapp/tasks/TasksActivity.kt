@@ -22,6 +22,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -46,15 +47,43 @@ class TasksActivity : AppCompatActivity() {
         setupNavigationDrawer()
         setSupportActionBar(findViewById(R.id.toolbar))
 
-        val navController: NavController = findNavController(R.id.nav_host_fragment)
+/*        val navController: NavController = findNavController(R.id.nav_host_fragment)
         appBarConfiguration =
             AppBarConfiguration.Builder(R.id.tasks_fragment_dest, R.id.statistics_fragment_dest)
                 .setDrawerLayout(drawerLayout)
                 .build()
         setupActionBarWithNavController(navController, appBarConfiguration)
         findViewById<NavigationView>(R.id.nav_view)
-            .setupWithNavController(navController)
+            .setupWithNavController(navController)*/
 
+        // Check
+        // https://developer.android.com/guide/navigation/navigation-ui#Tie-navdrawer
+
+        // 1- Get the nav controller
+        val navController = findNavController(R.id.nav_host_fragment)
+
+        // 2- Set up AppBarConfiguration that used to manage the behavior of the Navigation button
+        // in the upper-left corner of your app's display area.
+        appBarConfiguration =
+                AppBarConfiguration.Builder(setOf(R.id.tasks_fragment_dest, R.id.statistics_fragment_dest))
+                        .setDrawerLayout(drawerLayout) // connect the DrawerLayout to your navigation graph by passing it to AppBarConfiguration, //
+                        .build()
+         // You can use it directly without specifying destinations
+         // val appBarConfiguration = AppBarConfiguration(navController.graph)
+
+        // 3- To add navigation support to the default action bar
+        setupActionBarWithNavController(navController, appBarConfiguration)
+
+        // 4- Link nav view with nav controller.
+        findViewById<NavigationView>(R.id.nav_view)
+                .setupWithNavController(navController)
+
+
+
+        showToast()
+    }
+
+    private fun showToast() {
         // Test showing custom toast
         val container = findViewById<ViewGroup>(R.id.toast_container)
         val customLayout = layoutInflater.inflate(R.layout.toast_view, container)
@@ -69,8 +98,9 @@ class TasksActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        return findNavController(R.id.nav_host_fragment).navigateUp(appBarConfiguration)
-            || super.onSupportNavigateUp()
+        val navController = findNavController(R.id.nav_host_fragment)
+        return navController.navigateUp(appBarConfiguration)
+                || super.onSupportNavigateUp()
     }
 
     private fun setupNavigationDrawer() {
