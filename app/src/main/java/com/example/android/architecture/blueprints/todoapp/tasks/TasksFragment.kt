@@ -28,6 +28,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.example.android.architecture.blueprints.reactive.MajeedFragmentDes
 import com.example.android.architecture.blueprints.todoapp.EventObserver
 import com.example.android.architecture.blueprints.todoapp.R
 import com.example.android.architecture.blueprints.todoapp.TasksViewModelFactory
@@ -37,6 +38,7 @@ import com.example.android.architecture.blueprints.todoapp.databinding.TasksFrag
 import com.example.android.architecture.blueprints.todoapp.util.setupRefreshLayout
 import com.example.android.architecture.blueprints.todoapp.util.setupSnackbar
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.tasks_frag.*
 import timber.log.Timber
 
 /**
@@ -95,6 +97,13 @@ class TasksFragment : Fragment() {
         setupListAdapter()
         setupRefreshLayout(viewDataBinding.refreshLayout, viewDataBinding.tasksList)
         setupNavigation()
+
+        // This is for test only
+        buttonTest.setOnClickListener {
+            val action = TasksFragmentDirections
+                    .actionTasksFragmentDestToMajeedFragmentDest2("ThisIsTestMajeedArgs")
+            findNavController().navigate(action)
+        }
     }
 
     private fun setupNavigation() {

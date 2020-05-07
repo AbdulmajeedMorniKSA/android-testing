@@ -64,8 +64,10 @@ class TasksActivity : AppCompatActivity() {
 
         // 2- Set up AppBarConfiguration that used to manage the behavior of the Navigation button
         // in the upper-left corner of your app's display area.
+
+        // The Up button will not be displayed when on these destinations.(Top-level destinations)
         appBarConfiguration =
-                AppBarConfiguration.Builder(setOf(R.id.tasks_fragment_dest, R.id.statistics_fragment_dest))
+                AppBarConfiguration.Builder(R.id.tasks_fragment_dest)
                         .setDrawerLayout(drawerLayout) // connect the DrawerLayout to your navigation graph by passing it to AppBarConfiguration, //
                         .build()
          // You can use it directly without specifying destinations
@@ -77,8 +79,6 @@ class TasksActivity : AppCompatActivity() {
         // 4- Link nav view with nav controller.
         findViewById<NavigationView>(R.id.nav_view)
                 .setupWithNavController(navController)
-
-
 
         showToast()
     }

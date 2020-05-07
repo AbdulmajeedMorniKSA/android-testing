@@ -73,6 +73,13 @@
                         android:layout_marginBottom="@dimen/list_item_padding"
                         android:text="@{context.getString(viewmodel.noTasksLabel)}" />
                 </LinearLayout>
+
+                <Button
+                    android:id="@+id/buttonTest"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:text="Navigate" />
             </RelativeLayout>
 
         </com.example.android.architecture.blueprints.todoapp.ScrollChildSwipeRefreshLayout>
