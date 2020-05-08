@@ -17,6 +17,7 @@
 package com.example.android.architecture.blueprints.todoapp
 
 import android.app.Application
+import com.example.android.architecture.blueprints.todoapp.util.NotificationHelper
 import timber.log.Timber
 import timber.log.Timber.DebugTree
 
@@ -32,10 +33,10 @@ class TodoApplication : Application() {
         super.onCreate()
         instance = this
         if (BuildConfig.DEBUG) Timber.plant(DebugTree())
+        NotificationHelper()
     }
 
     companion object {
-
         private lateinit var instance: TodoApplication
 
         @JvmStatic
