@@ -27,7 +27,9 @@ class MajeedFragmentDes : Fragment() {
 
     private lateinit var viewDataBinding: FragmentMajeedDesBinding
 
-    private lateinit var notificationManager: NotificationManager
+    private val notificationManager by lazy {
+        requireContext().getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+    }
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -42,14 +44,12 @@ class MajeedFragmentDes : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         tvTest.text = args.testInfoArgs
-
         notify.setOnClickListener {
             sendNotification()
         }
     }
 
     private fun sendNotification() {
-        notificationManager = requireContext().getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) createNotificationChannel()
         val builder = getNotificationBuilder()
         notificationManager.notify(Random.nextInt(), builder.build())
@@ -102,5 +102,5 @@ class MajeedFragmentDes : Fragment() {
     fun deleteChannel(channelId: String) {
         notificationManager.deleteNotificationChannel(channelId)
     }
-    
+
 }
