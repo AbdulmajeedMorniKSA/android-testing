@@ -97,4 +97,10 @@ class MajeedFragmentDes : Fragment() {
         const val CHANNEL_ID = "channel_test_id"
         const val CHANNEL_NAME = "General Channel"
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    fun deleteChannel(channelId: String) {
+        notificationManager.deleteNotificationChannel(channelId)
+    }
+    
 }
