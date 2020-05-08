@@ -56,14 +56,18 @@
             app:destination="@id/task_detail_fragment_dest" />
         <action
             android:id="@+id/action_tasksFragment_to_addEditTaskFragment"
-            app:destination="@id/add_edit_task_fragment_dest" />
+            app:destination="@id/add_edit_task_fragment_dest"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim" />
         <argument
             android:name="userMessage"
             app:argType="integer"
             android:defaultValue="0" />
         <action
             android:id="@+id/action_tasks_fragment_dest_to_majeed_fragment_dest2"
-            app:destination="@id/majeed_fragment_dest"/>
+            app:destination="@id/majeed_fragment_dest"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit" />
 
     </fragment>
     <fragment
@@ -91,7 +95,7 @@
 
     <fragment
         android:id="@+id/majeed_fragment_dest"
-        android:name="com.example.android.architecture.blueprints.reactive.MajeedFragmentDes"
+        android:name="com.example.android.architecture.blueprints.todoapp.majeettest.MajeedFragmentDes"
         android:label="fragment_majeed_des"
         tools:layout="@layout/fragment_majeed_des">
         <argument

@@ -1,4 +1,4 @@
-package com.example.android.architecture.blueprints.reactive
+package com.example.android.architecture.blueprints.todoapp.majeettest
 
 import android.os.Bundle
 import android.view.LayoutInflater

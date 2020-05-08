@@ -33,6 +33,15 @@ android {
         returnDefaultValues = true
         // is required to keep your unit tests running as you add idling resource code to your application code.
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
 }
 
 dependencies {
@@ -52,7 +61,6 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayoutVersion"
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     kapt "androidx.room:room-compiler:$roomVersion"
-
 
     // Architecture Components
     implementation "androidx.room:room-runtime:$roomVersion"
@@ -83,8 +91,7 @@ dependencies {
     androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
 
     // Testing code should not be included in the main code.
-    // Once https://issuetracker.google.com/128612536 is fixed this can be fixed.
-    implementation "androidx.fragment:fragment-testing:$fragmentVersion"
+    debugImplementation "androidx.fragment:fragment-testing:$fragmentVersion"
     implementation "androidx.test:core:$androidXTestCoreVersion"
 
     // AndroidX Test - JVM testing
