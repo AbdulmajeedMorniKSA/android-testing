@@ -30,17 +30,7 @@ android {
     // Allows you to access android resources in your unit tests, i
     testOptions.unitTests {
         includeAndroidResources = true
-        returnDefaultValues = true
-        // is required to keep your unit tests running as you add idling resource code to your application code.
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        returnDefaultValues = true // is required to keep your unit tests running as you add idling resource code to your application code.
     }
 }
 
@@ -56,11 +46,10 @@ dependencies {
     implementation "com.jakewharton.timber:timber:$timberVersion"
     implementation "androidx.legacy:legacy-support-v4:$androidXLegacySupport"
     implementation "androidx.room:room-runtime:$roomVersion"
-    implementation "androidx.test.espresso:espresso-idling-resource:$espressoVersion"
-    // Used in Espresso UI test, but may be in production code
+    implementation "androidx.test.espresso:espresso-idling-resource:$espressoVersion" // Used in Espresso UI test, but may be in production code
     implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayoutVersion"
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     kapt "androidx.room:room-compiler:$roomVersion"
+
 
     // Architecture Components
     implementation "androidx.room:room-runtime:$roomVersion"
@@ -79,8 +68,8 @@ dependencies {
     testImplementation "androidx.arch.core:core-testing:$archTestingVersion"
     testImplementation "org.robolectric:robolectric:$robolectricVersion"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
-    testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.0.0'
-    // This is to fix issues of failed testing of suspending function with Mockito.
+    //testImplementation "org.mockito:mockito-core:$mockitoVersion"
+    testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.0.0'  // This is to fix issues of failed testing of suspending function with Mockito.
 
     // Dependencies for Android instrumented unit tests
     androidTestImplementation "androidx.arch.core:core-testing:$archTestingVersion"
@@ -88,7 +77,10 @@ dependencies {
     androidTestImplementation "org.mockito:mockito-core:$mockitoVersion"
     androidTestImplementation "com.linkedin.dexmaker:dexmaker-mockito:$dexMakerVersion"
     androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
-    debugImplementation "androidx.fragment:fragment-testing:$fragmentVersion"
+
+    // Testing code should not be included in the main code.
+    // Once https://issuetracker.google.com/128612536 is fixed this can be fixed.
+    implementation "androidx.fragment:fragment-testing:$fragmentVersion"
     implementation "androidx.test:core:$androidXTestCoreVersion"
 
     // AndroidX Test - JVM testing

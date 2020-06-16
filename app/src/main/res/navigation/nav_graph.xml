@@ -65,9 +65,7 @@
             android:defaultValue="0" />
         <action
             android:id="@+id/action_tasks_fragment_dest_to_majeed_fragment_dest2"
-            app:destination="@id/majeed_fragment_dest"
-            app:enterAnim="@anim/fragment_fade_enter"
-            app:exitAnim="@anim/fragment_fade_exit" />
+            app:destination="@id/majeed_fragment_dest" />
 
     </fragment>
     <fragment
